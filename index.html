@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holdfast: block Reels and Shorts, keep the apps</title>
+<meta name="description" content="Holdfast is an Android app that blocks Instagram Reels, YouTube Shorts, TikTok's For You and Facebook Reels inside the apps, and leaves your messages, friends and chosen videos alone.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Holdfast: block Reels and Shorts, keep the apps">
+<meta property="og:description" content="Blocks Reels, Shorts and For You inside Instagram, YouTube, TikTok and Facebook. Messages and friends stay. No account, no internet permission.">
+<meta property="og:url" content="https://contactholdfastapp-cloud.github.io/holdfast-site/">
+<meta property="og:image" content="https://contactholdfastapp-cloud.github.io/holdfast-site/assets/share.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+  @font-face { font-family: "Atkinson Next"; src: url("assets/fonts/atkinson-next-regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Atkinson Next"; src: url("assets/fonts/atkinson-next-semibold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+  @font-face { font-family: "Atkinson Next"; src: url("assets/fonts/atkinson-next-bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+
+  :root {
+    --bg: #F3F5F2;
+    --surface: #FFFFFF;
+    --sunken: #E7ECE8;
+    --line: #D3DBD6;
+    --text: #0F1D1B;
+    --text-2: #4A5A55;
+    --accent: #245C4F;
+    --accent-soft: #D6E8E0;
+    --button: #0F1D1B;
+    --on-button: #F3F5F2;
+    --deep: #0B1614;
+    --on-deep: #E3ECE8;
+    --on-deep-2: #A7B7B1;
+    --sea: #7FCBB3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0B1614;
+      --surface: #13211E;
+      --sunken: #07100E;
+      --line: #22322E;
+      --text: #E3ECE8;
+      --text-2: #A7B7B1;
+      --accent: #7FCBB3;
+      --accent-soft: #173A31;
+      --button: #7FCBB3;
+      --on-button: #0B1614;
+      --deep: #07100E;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 18px/1.6 "Atkinson Next", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  h1, h2, h3 { line-height: 1.15; margin: 0; }
+  h2 { font-size: clamp(28px, 3.4vw, 38px); font-weight: 700; }
+  h3 { font-size: 20px; font-weight: 700; }
+  p { margin: 0 0 16px; }
+
+  /* Buttons: one solid colour, no gradient. */
+  .play {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--button); color: var(--on-button);
+    font-weight: 600; font-size: 17px; text-decoration: none;
+    padding: 14px 22px; border-radius: 12px;
+  }
+  .play svg { width: 18px; height: 18px; flex: none; }
+  .play:hover { filter: brightness(1.15); }
+
+  /* Header */
+  header .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 22px; padding-bottom: 22px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 700; font-size: 21px; }
+  .brand svg { width: 22px; height: 32px; color: var(--accent); }
+  header .play { padding: 10px 16px; font-size: 15px; }
+
+  /* Hero: words left, the real block screen right. */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 56px; align-items: center; padding-top: 40px; padding-bottom: 72px; }
+  .hero h1 { font-size: clamp(36px, 4.6vw, 56px); font-weight: 700; letter-spacing: -0.01em; }
+  .hero .lead { font-size: 20px; color: var(--text-2); max-width: 34em; margin: 22px 0 30px; }
+  .hero .small { font-size: 15px; color: var(--text-2); margin-top: 14px; }
+  .phone { width: 100%; max-width: 330px; border-radius: 30px; border: 8px solid #0F1D1B; background: #0F1D1B; }
+  .hero .phone { justify-self: center; }
+
+  section { padding: 72px 0; }
+  .rule { border-top: 1px solid var(--line); }
+
+  /* What changes: two plain lists side by side. */
+  .changes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 48px; }
+  .changes h2 { grid-column: 1 / 2; }
+  .changes ul { list-style: none; padding: 0; margin: 0; }
+  .changes li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .changes li:last-child { border-bottom: 0; }
+  .changes h3 { margin-bottom: 8px; }
+  .changes .muted { color: var(--text-2); font-size: 16px; }
+  .note { color: var(--text-2); font-size: 16px; margin-top: 28px; max-width: 46em; }
+
+  /* How it works: a real order, so numbers. */
+  .how { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; }
+  .how ol { list-style: none; counter-reset: step; padding: 0; margin: 0; }
+  .how li { counter-increment: step; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px; padding: 0 0 26px; }
+  .how li::before { content: counter(step); font-weight: 700; font-size: 20px; color: var(--accent); line-height: 1.5; }
+  .how li p { margin: 0; color: var(--text-2); }
+  .how li strong { display: block; color: var(--text); font-size: 19px; }
+  .pause { color: var(--text-2); margin-top: 18px; }
+
+  /* Stronger: words left, two real screens staggered right. */
+  .stronger { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; }
+  .stronger dl { margin: 22px 0 0; }
+  .stronger dt { font-weight: 700; margin-top: 14px; }
+  .stronger dd { margin: 2px 0 0; color: var(--text-2); }
+  .shots { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+  .shots figure { margin: 0; }
+  .shots figure:last-child { margin-top: 64px; }
+  .shots .phone { max-width: none; border-width: 6px; border-radius: 24px; }
+  figcaption { font-size: 15px; color: var(--text-2); margin-top: 10px; }
+  .plans { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--text-2); }
+  .plans strong { color: var(--text); }
+
+  /* Private: the dark band, with a real kelp photo. */
+  .private { background: var(--deep); color: var(--on-deep); padding: 0; position: relative; overflow: hidden; }
+  .private .text { padding: 88px 0; max-width: 560px; }
+  .private h2 { color: var(--on-deep); }
+  .private p, .private li { color: var(--on-deep-2); }
+  .private ul { padding-left: 20px; margin: 20px 0 26px; }
+  .private li { margin-bottom: 10px; }
+  .private li strong { color: var(--on-deep); }
+  .private a { color: var(--sea); }
+  .private .photo { position: absolute; top: 0; right: 0; bottom: 0; width: 40%; background: url("assets/kelp.webp") center 30% / cover no-repeat; }
+
+  /* Questions */
+  .faq > * { max-width: 760px; }
+  details { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; list-style: none; padding: 18px 32px 18px 0; font-weight: 600; font-size: 19px; position: relative; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; position: absolute; right: 4px; top: 16px; font-size: 24px; color: var(--accent); font-weight: 400; }
+  details[open] summary::after { content: "\2212"; }
+  details p { color: var(--text-2); margin: 0 0 20px; max-width: 42em; }
+
+  .end { text-align: left; }
+  .end p { color: var(--text-2); }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 44px; font-size: 15px; color: var(--text-2); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; }
+  footer .brand { font-size: 17px; }
+  footer .brand svg { width: 17px; height: 24px; }
+  footer .fine { flex-basis: 100%; }
+
+  @media (max-width: 860px) {
+    .hero, .how, .stronger { grid-template-columns: minmax(0, 1fr); }
+    .hero { gap: 40px; padding-top: 16px; }
+    .hero .phone { max-width: 280px; }
+    .changes { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .private .text { padding: 56px 0 40px; }
+    .private .photo { position: static; width: auto; height: 240px; }
+    section { padding: 56px 0; }
+  }
+  @media (max-width: 480px) {
+    header .play { display: none; } /* the main button sits just below on a phone */
+    .shots figure:last-child { margin-top: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Holdfast home">
+      <svg viewBox="33 25 42 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="M54 62 C47 63 42 67 41 75"/><path d="M54 62 C61 63 66 67 67 75"/></g><rect x="50" y="33.5" width="8" height="42.5" rx="4" fill="currentColor"/><rect x="36" y="73.5" width="36" height="8" rx="4" fill="currentColor"/><path d="M57.5 47 C60 36 65.5 30 72 28 C71.5 37.5 66.5 45.5 57.5 53.5 Z" fill="currentColor"/><path d="M50.5 57 C46.5 49.5 41.5 46 36.5 45 C38 52 43 57.5 50.5 61.5 Z" fill="currentColor"/></svg>
+      Holdfast
+    </a>
+    <a class="play" href="https://play.google.com/store/apps/details?id=app.holdfast">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 3.5v17l14-8.5z"/></svg><span>Get it on Google Play</span>
+    </a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <h1>Keep the apps.<br>Lose the endless feed.</h1>
+      <p class="lead">Holdfast blocks Instagram Reels, YouTube Shorts, TikTok's For You and Facebook Reels inside the apps. Your messages, your friends and the videos you go looking for stay exactly where they are.</p>
+      <a class="play" href="https://play.google.com/store/apps/details?id=app.holdfast">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 3.5v17l14-8.5z"/></svg>Get it on Google Play
+      </a>
+      <p class="small">For Android. Free to start. Pro's yearly plan begins with a 14-day free trial for new subscribers.</p>
+    </div>
+    <img class="phone" src="assets/block-screen.webp" width="640" height="1333" alt="Holdfast's block screen over Instagram Reels: a calm kelp picture, the person's own reason, a Back to Instagram button and an Unblock for 5 minutes button with a short countdown.">
+  </div>
+
+  <section class="rule">
+    <div class="wrap">
+      <div class="changes">
+        <h2>Only the feed goes.</h2>
+        <div>
+          <h3>Blocked</h3>
+          <ul>
+            <li>Instagram Reels <span class="muted">and, with Pro, the Explore grid</span></li>
+            <li>YouTube Shorts</li>
+            <li>TikTok For You <span class="muted">and, with Pro, Following and LIVE</span></li>
+            <li>Facebook Reels, <span class="muted">including reels you tap in your feed</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Still works</h3>
+          <ul>
+            <li>Your messages and chats</li>
+            <li>Friends' posts, stories and profiles</li>
+            <li>Search, and the videos you choose to watch</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Most blockers lock you out of the whole app, so you delete it, miss your friends and reinstall it a few days later. Holdfast covers the part that keeps you scrolling and leaves the rest alone. It only blocks a whole app when you ask it to, at bedtime or on a schedule.</p>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="wrap how">
+      <div>
+        <h2>How it works</h2>
+        <p class="pause">Most of the time you reach for the feed out of habit. Holdfast gives you a moment to notice, shows you the reason you wrote for yourself, and lets you decide. Nothing is deleted, reported or shared.</p>
+      </div>
+      <ol>
+        <li><span><strong>Turn Holdfast on</strong><p>Android asks once, in its Accessibility settings. Setup shows you exactly where to tap.</p></span></li>
+        <li><span><strong>Use your apps as usual</strong><p>Chats, profiles and search work the same as before.</p></span></li>
+        <li><span><strong>A feed opens, Holdfast steps in</strong><p>A calm block screen covers it as soon as it opens, with your reason on it.</p></span></li>
+        <li><span><strong>Go back, or choose to watch</strong><p>Tap Back to return to the rest of the app. If you really want to watch, unblock for 5 minutes after a short wait, and you land on the same video.</p></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="wrap stronger">
+      <div>
+        <h2>When you want it stronger</h2>
+        <dl>
+          <dt>Firm mode</dt><dd>Two unblocks a day, each after a 60-second wait.</dd>
+          <dt>Lock</dt><dd>No unblocking at all for an hour, until morning, for a day or for a week.</dd>
+          <dt>Bedtime and schedules</dt><dd>All four apps blocked completely while you sleep, or during the hours you pick for work or study.</dd>
+          <dt>Your weeks</dt><dd>See how often Holdfast stepped in, week by week, so you can tell whether you reach for it less.</dd>
+        </dl>
+        <p class="plans"><strong>Free</strong> blocks the main feed of the one app that takes most of your time. <strong>Pro</strong> covers all four apps and every feed, and adds everything above plus your own photo on the block screen. Google Play shows the price in your currency before you subscribe, and you can cancel anytime in Google Play.</p>
+      </div>
+      <div class="shots">
+        <figure>
+          <img class="phone" src="assets/bedtime.webp" width="640" height="1333" loading="lazy" alt="Holdfast's Bedtime page: all four apps blocked from 22:30 to 07:00 every night.">
+          <figcaption>Bedtime, every night (Pro)</figcaption>
+        </figure>
+        <figure>
+          <img class="phone" src="assets/progress.webp" width="640" height="1333" loading="lazy" alt="Holdfast's Progress page with example data: a weekly bar chart easing from 41 times in the first week to 4 this week.">
+          <figcaption>Your weeks side by side (Pro, example data)</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="private">
+    <div class="wrap">
+      <div class="text">
+        <h2>Nothing leaves your phone.</h2>
+        <p style="margin-top:18px">Holdfast has no permission to use the internet. Android enforces that, so it cannot send anything anywhere.</p>
+        <ul>
+          <li><strong>No account</strong> and no sign-in.</li>
+          <li><strong>No ads, analytics or tracking.</strong></li>
+          <li><strong>It looks at which screen is open</strong> in Instagram, YouTube, TikTok and Facebook, never your messages, photos or what you type.</li>
+        </ul>
+        <a href="privacy/">Read the privacy policy</a>
+      </div>
+      <div class="photo" role="img" aria-label="Sunlight through a kelp forest, the picture on Holdfast's block screen."></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap faq">
+      <h2 style="margin-bottom:12px">Questions</h2>
+      <details>
+        <summary>Why does Holdfast need Accessibility?</summary>
+        <p>It is the only Android permission that can tell Reels apart from your messages inside the same app. Holdfast uses it for one job: noticing when a short-video feed opens, so it can show the block screen. You turn it on yourself and can turn it off at any time in Android's settings.</p>
+      </details>
+      <details>
+        <summary>Does it read my messages?</summary>
+        <p>No. It looks at the layout of the screen, such as the names of tabs and whether a screen is a video feed. It never reads messages, photos, posts, passwords or anything you type. What it sees is used in the moment and is not saved or sent anywhere.</p>
+      </details>
+      <details>
+        <summary>Does it work in my language?</summary>
+        <p>Holdfast has been tested with the four apps set to English, Spanish, French, German, Portuguese, Turkish, Indonesian, Hindi, Japanese, Korean and Arabic.</p>
+      </details>
+      <details>
+        <summary>Can I still turn it off?</summary>
+        <p>Yes, always, in Android's Accessibility settings. Making blocking weaker inside Holdfast takes a little while on purpose, so one weak moment can't undo a good decision.</p>
+      </details>
+      <details>
+        <summary>Is there an iPhone version?</summary>
+        <p>No. iPhone apps can only block whole apps, not one feed inside them, so Holdfast is for Android.</p>
+      </details>
+      <details>
+        <summary>How much does Pro cost?</summary>
+        <p>Holdfast is free to start. Pro is a yearly or monthly subscription, and the yearly plan begins with a 14-day free trial for new subscribers. Google Play shows the price in your own currency before you subscribe.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="rule end">
+    <div class="wrap">
+      <h2>Keep the apps. Lose the endless feed.</h2>
+      <p style="margin:14px 0 26px">For Android phones, with Instagram, YouTube, TikTok and Facebook.</p>
+      <a class="play" href="https://play.google.com/store/apps/details?id=app.holdfast">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 3.5v17l14-8.5z"/></svg>Get it on Google Play
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Holdfast home">
+      <svg viewBox="33 25 42 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="M54 62 C47 63 42 67 41 75"/><path d="M54 62 C61 63 66 67 67 75"/></g><rect x="50" y="33.5" width="8" height="42.5" rx="4" fill="currentColor"/><rect x="36" y="73.5" width="36" height="8" rx="4" fill="currentColor"/><path d="M57.5 47 C60 36 65.5 30 72 28 C71.5 37.5 66.5 45.5 57.5 53.5 Z" fill="currentColor"/><path d="M50.5 57 C46.5 49.5 41.5 46 36.5 45 C38 52 43 57.5 50.5 61.5 Z" fill="currentColor"/></svg>
+      Holdfast
+    </a>
+    <a href="privacy/">Privacy policy</a>
+    <a href="mailto:contact.holdfastapp@gmail.com">contact.holdfastapp@gmail.com</a>
+    <span class="fine">Holdfast is an independent app and is not affiliated with Instagram, YouTube, TikTok or Facebook.</span>
+  </div>
+</footer>
+
+</body>
+</html>
